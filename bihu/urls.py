@@ -15,14 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.static import serve
 
 from bihu.settings import MEDIA_ROOT
 from apps.users.views import test, verify
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', test),
-    path('.well-known/acme-challenge/pycB7iWgN8uTQBUx8PiEjsRfPlqOXglff63pCTCLtsM/', verify),
+    url(r'accounts/', include('allauth.urls')), # 第三方登陆url
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),     # 配置url里面文件的上传
 ]
