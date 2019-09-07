@@ -5,4 +5,4 @@ from django.shortcuts import render
 
 
 def test(request):
-    return HttpResponse("hello", content_type='application/json')
+    return HttpResponse("hello22", content_type='application/json')
