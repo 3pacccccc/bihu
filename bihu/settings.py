@@ -45,12 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'users',
+    'users',
 
     # 第三方登陆所需包
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
     # 'sorl.thumbnail'
 ]
 SITE_ID = 1
