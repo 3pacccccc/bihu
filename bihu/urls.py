@@ -19,8 +19,9 @@ from django.urls import path
 from django.views.static import serve
 
 from bihu.settings import MEDIA_ROOT
-
+from apps.users.views import test
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('test/', test),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),     # 配置url里面文件的上传
 ]
