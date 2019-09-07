@@ -27,13 +27,13 @@ SECRET_KEY = '9xg7iqn85&m479j8bx)jj+qv2=2x^z#w^gvzt((hrc4#6@k-^g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bihu.xiaoma0121.cn', ]
 
 # Application definition
 
 # 使得INSTALLED_APPS扫描到apps文件夹下面的app应用
-sys.path.insert(0,BASE_DIR)
-sys.path.insert(0,os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, BASE_DIR)
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # 重载django的user表
 AUTH_USER_MODEL = 'users.User'
@@ -135,6 +135,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
