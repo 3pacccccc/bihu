@@ -5,4 +5,5 @@ from django.shortcuts import render
 
 
 def test(request):
+    a = 1 / 0
     return HttpResponse("hello88", content_type='application/json')
