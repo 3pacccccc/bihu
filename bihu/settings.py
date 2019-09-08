@@ -73,6 +73,13 @@ INSTALLED_APPS = [
     'crispy_forms',
     'compressor'
 ]
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
+
 SITE_ID = 1
 
 MIDDLEWARE = [
