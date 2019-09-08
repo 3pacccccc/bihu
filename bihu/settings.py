@@ -27,7 +27,23 @@ SECRET_KEY = '9xg7iqn85&m479j8bx)jj+qv2=2x^z#w^gvzt((hrc4#6@k-^g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bihu.xiaoma0121.cn', ]
+ALLOWED_HOSTS = ['bihu.xiaoma0121.cn', "127.0.0.1"]
+
+# django all-auth验证所需配置
+# django-allauth
+# ------------------------------------------------------------------------------
+ACCOUNT_ALLOW_REGISTRATION = True
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_REQUIRED = True
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
+
 
 # Application definition
 
@@ -53,7 +69,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'sorl.thumbnail'
+    # 'sorl.thumbnail'
+    'crispy_forms',
+    'compressor'
 ]
 SITE_ID = 1
 
