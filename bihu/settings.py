@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # app应用
     'users',
 
     # 第三方登陆所需包
@@ -82,7 +83,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'sorl.thumbnail',
     'crispy_forms',
-    'compressor'
+    'compressor',
+    'allauth.socialaccount.providers.github',
 ]
 
 STATICFILES_FINDERS = [
