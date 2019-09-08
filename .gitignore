@@ -18,6 +18,7 @@
 !*.sh
 /mainsys/config.py
 /bihu/dbconfig.py
+/bihu/config.py
 /mainsys/webconfig.py
 .thumbnails
 migrations/

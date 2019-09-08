@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import sys
 
+from .config import *
 from .dbconfig import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -44,6 +45,16 @@ ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
 
+# django-allauth注册发送邮件的配置
+EMAIL_BACKEND = DJANGO_EMAIL_BACKEND
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+EMAIL_HOST = DJANGO_EMAIL_HOST
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-port
+EMAIL_USE_SSL = DJANGO_EMAIL_USE_SSL
+EMAIL_PORT = DJANGO_EMAIL_PORT
+EMAIL_HOST_USER = DJANGO_EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = DJANGO_EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = DJANGO_DEFAULT_FROM_EMAIL
 
 # Application definition
 
@@ -153,15 +164,26 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
+#
+# TIME_ZONE = 'UTC'
+#
+# USE_I18N = True
+#
+# USE_L10N = True
+#
+# USE_TZ = True
 
-TIME_ZONE = 'UTC'
+# 将系统改为中文
+LANGUAGE_CODE = 'zh-hans'
+
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
