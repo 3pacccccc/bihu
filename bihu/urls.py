@@ -25,4 +25,7 @@ urlpatterns = [
     url(r'accounts/', include('allauth.urls')),  # 第三方登陆url
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),  # 配置url里面文件的上传
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),  # 配置url里面文件的上传
+
+    # APP下的路由
+    path('users/', include('users.urls', namespace='users')),
 ]
