@@ -28,4 +28,5 @@ urlpatterns = [
 
     # APP下的路由
     path('users/', include('users.urls', namespace='users')),
+    path('news/', include('news.urls', namespace='news')),
 ]

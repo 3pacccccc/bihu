@@ -72,9 +72,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+
 
     # app应用
     'users',
+    'news',
 
     # 第三方登陆所需包
     'django.contrib.sites',
