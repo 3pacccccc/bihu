@@ -9,6 +9,15 @@
 {% block inner %}
 
 <h1>{% trans "Sign In" %}</h1>
+        <style>
+        #extra-login-fields {
+            display: none;
+        }
+        body.login {
+            background: #fff url(https://cdn.qiyedata.net/bgpic/admin/login-bg11.jpg) 50% 0 no-repeat;
+            background-size: cover;
+        }
+    </style>
 
 {% get_providers as socialaccount_providers %}
 
