@@ -20,6 +20,7 @@
 /bihu/dbconfig.py
 /bihu/config.py
 /mainsys/webconfig.py
+/media
 .thumbnails
 migrations/
 debug.text
