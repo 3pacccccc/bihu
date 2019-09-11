@@ -1,7 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.http import HttpResponseBadRequest
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView, DeleteView
 
 from news.models import News
+from utils.helper import ajax_require, AuthorRequireMixin
 
 
 class NewsListView(LoginRequiredMixin, ListView):
@@ -40,3 +46,29 @@ class NewsListView(LoginRequiredMixin, ListView):
     #     context = super(NewsListView, self).get_context_data()
     #     context['views'] = 100
     #     return context
+
+
+@login_required
+@ajax_require
+@require_http_methods(['POST'])
+def post_news(request):
+    # 用户发表文章
+    post = request.POST.get('post', '').strip()
+    if post:
+        posted = News.objects.create(user=request.user, content=post)
+    else:
+        return HttpResponseBadRequest("发表内容不能为空")
+
+    return render(request, 'news/news_single.html', {'news': posted})
+
+
+class NewsDeleteView(LoginRequiredMixin, AuthorRequireMixin, DeleteView):
+    model = News
+    template_name = 'news/news_confirm_delete.html'
+    slug_url_kwarg = "slug"  # 通过url传入要删除的对象主键ID，默认是slug
+    # pk_url_kwarg = 'pk'  # 在数据库中根据某个字段进行查找删除
+    success_url = reverse_lazy('news:list')
+
+
+def like(request):
+    news_id = request.POST.get('new')

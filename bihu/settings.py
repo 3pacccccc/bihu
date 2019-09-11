@@ -74,7 +74,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-
     # app应用
     'users',
     'news',
