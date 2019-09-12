@@ -1,6 +1,8 @@
+import time
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
@@ -71,4 +73,18 @@ class NewsDeleteView(LoginRequiredMixin, AuthorRequireMixin, DeleteView):
 
 
 def like(request):
-    news_id = request.POST.get('new')
+    news_id = request.POST.get('news')
+
+    news_obj = News.objects.get(news_id)
+    if request.user in news_obj.liked.all():
+        news_obj.liked.remove(request.user)
+    else:
+        news_obj.liked.add(request.user)
+
+    news_like_count = news_obj.liked.count()
+    return JsonResponse({'likes': news_like_count})
+
+
+def test(request):
+    time.sleep(10)
+    return HttpResponse("ok", content_type='application/json')
