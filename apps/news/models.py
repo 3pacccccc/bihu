@@ -60,3 +60,20 @@ class News(models.Model):
             reply=True,
             parent=parent
         )
+
+    def get_likers(self):
+        return self.liked.all()
+
+    def count_likers(self):
+        """点赞数"""
+        return self.liked.count()
+
+    def comment_count(self):
+        """评论数"""
+        return self.get_thread().count()
+
+    def get_thread(self):
+        """关联到当前记录的所有记录"""
+        self.refresh_from_db()
+        parent = self.get_parent()
+        return parent.thread.all()

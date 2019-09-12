@@ -107,6 +107,15 @@ def get_thread(request):
     })
 
 
-def test(request):
-    time.sleep(10)
-    return HttpResponse("ok", content_type='application/json')
+@login_required
+@ajax_require
+@require_http_methods('[POST')
+def post_reply(request):
+    reply = request.POST.get('reply', '').strip()
+    news_id = request.POST.get('parent', '')
+    news_obj = News.objects.get(pk=news_id)
+    if reply:
+        news_obj.reply_this(user=request.user, text=reply)
+        return JsonResponse({'comments': news_obj.comment_count()})
+    else:
+        return HttpResponseBadRequest("发表内容不能为空")
