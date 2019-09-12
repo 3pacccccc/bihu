@@ -75,13 +75,14 @@ class NewsDeleteView(LoginRequiredMixin, AuthorRequireMixin, DeleteView):
 def like(request):
     news_id = request.POST.get('news')
 
-    news_obj = News.objects.get(news_id)
+    news_obj = News.objects.get(pk=news_id)
     if request.user in news_obj.liked.all():
         news_obj.liked.remove(request.user)
     else:
         news_obj.liked.add(request.user)
-
+    # 获取点赞数量
     news_like_count = news_obj.liked.count()
+    # 获取点赞人员列表
     return JsonResponse({'likes': news_like_count})
 
 
