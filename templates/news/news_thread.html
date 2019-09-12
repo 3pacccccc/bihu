@@ -11,11 +11,13 @@
                 {% endthumbnail %}
             </div>
             <div class="post">
-                {% if request.user.username == reply.user.username %}
+                {% ifequal username reply.user.username %}
+                    {{ reply.username }}
+
                     <a href="{% url 'news:delete_news' reply.pk %}">
                         <i class="fa fa-times pull-right" aria-hidden="true" title="点击删除这条动态"></i>
                     </a>
-                {% endif %}
+                {% endifequal %}
                 <p>
                     <strong>
                         <a href="{% url 'users:detail' reply.user.username %}">{{ reply.user.get_profile_name }}</a>
@@ -26,12 +28,13 @@
         </div>
         <div class="interaction" id="interaction">
             <a href="#" class="like" title="{% for i in news.get_likers %}{{ i }}&#10;{% endfor %}">
-                {% if request.user in news.get_likers %}
+                {% if user in reply.get_likers %}
+                    {{ reply.username }}
                     <i class="heart fa fa-heart" aria-hidden="true"></i>
                 {% else %}
                     <i class="heart fa fa-heart-o" aria-hidden="true"></i>
                 {% endif %}
-                <span class="like-count">{{ news.count_likers }}</span>
+                <span class="like-count">{{ reply.count_likers }}</span>
             </a>
             <a href="#" class="comment"><i class="fa fa-comment-o" aria-hidden="true"></i>
                 <span class="comment-count">{{ news.comment_count }}</span>
@@ -40,3 +43,4 @@
         </div>
     </li>
 {% endfor %}
+

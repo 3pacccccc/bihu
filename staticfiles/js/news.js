@@ -81,7 +81,8 @@ $(function () {
                 $("#newsThreadModal").modal("hide");
             },
             error: function (data) {
-                alert(data.responseText);
+                // alert(data.responseText);
+                alert("???");
             },
         });
     });

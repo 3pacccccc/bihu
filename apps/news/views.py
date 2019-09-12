@@ -1,11 +1,9 @@
-import time
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView, DeleteView
 
@@ -78,16 +76,19 @@ class NewsDeleteView(LoginRequiredMixin, AuthorRequireMixin, DeleteView):
 @require_http_methods(['POST'])
 def like(request):
     news_id = request.POST.get('news')
-
-    news_obj = News.objects.get(pk=news_id)
-    if request.user in news_obj.liked.all():
-        news_obj.liked.remove(request.user)
-    else:
-        news_obj.liked.add(request.user)
-    # 获取点赞数量
-    news_like_count = news_obj.liked.count()
-    # 获取点赞人员列表
-    return JsonResponse({'likes': news_like_count})
+    news = News.objects.get(pk=news_id)
+    news.switch_like(request.user)
+    return JsonResponse({"likes": news.count_likers()})
+    #
+    # news_obj = News.objects.get(pk=news_id)
+    # if request.user in news_obj.liked.all():
+    #     news_obj.liked.remove(request.user)
+    # else:
+    #     news_obj.liked.add(request.user)
+    # # 获取点赞数量
+    # news_like_count = news_obj.liked.count()
+    # # 获取点赞人员列表
+    # return JsonResponse({'likes': news_like_count})
 
 
 @login_required
@@ -97,8 +98,13 @@ def get_thread(request):
     news_id = request.GET['news']
     news = News.objects.get(pk=news_id)
     # render_to_string()表示加载模板，填充数据，返回字符串
-    news_html = render_to_string("news/news_single.html", {"news": news})  # 没有评论的时候
-    thread_html = render_to_string("news/news_thread.html", {"thread": news.get_thread()})  # 有评论的时候
+    heart_auth = request.user in news.get_likers()
+    news_html = render_to_string("news/news_single.html", {"news": news, 'heart_auth': heart_auth})  # 没有评论的时候
+    threads = News.objects.filter(parent=news_id).all()
+    # thread_html = render_to_string("news/news_thread.html", {"thread": news.get_thread()})  # 有评论的时候
+    username = request.user.username
+    user = request.user
+    thread_html = render_to_string("news/news_thread.html", {"thread": threads, "user": user, "username": username})  # 有评论的时候
     return JsonResponse({
         'uuid': news_id,
         'news': news_html,
@@ -116,5 +122,6 @@ def post_reply(request):
     if reply:
         news_obj.reply_this(user=request.user, text=reply)
         return JsonResponse({'comments': news_obj.comment_count()})
+
     else:
         return HttpResponseBadRequest("发表内容不能为空")

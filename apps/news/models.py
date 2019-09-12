@@ -77,3 +77,8 @@ class News(models.Model):
         self.refresh_from_db()
         parent = self.get_parent()
         return parent.thread.all()
+
+    def delete_auth(self, user):
+        if user.username == self.user.username:
+            return True
+        return False
