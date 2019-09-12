@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView, DeleteView
@@ -72,6 +73,9 @@ class NewsDeleteView(LoginRequiredMixin, AuthorRequireMixin, DeleteView):
     success_url = reverse_lazy('news:list')
 
 
+@login_required
+@ajax_require
+@require_http_methods(['POST'])
 def like(request):
     news_id = request.POST.get('news')
 
@@ -84,6 +88,23 @@ def like(request):
     news_like_count = news_obj.liked.count()
     # 获取点赞人员列表
     return JsonResponse({'likes': news_like_count})
+
+
+@login_required
+@ajax_require
+@require_http_methods(['GET'])
+def get_thread(request):
+    news_id = request.GET.get('news', '')
+    news_obj = News.objects.get(pk=news_id)
+    news_html = render_to_string('news/news_single.html', {'news': news_obj})  # 没有评论的时候
+    news_obj.refresh_from_db()
+    thread = news_obj.get_parent().thread.all()
+    thread_html = render_to_string('news/news_thread.html', {'thread': thread})  # 有评论的时候
+    return JsonResponse({
+        'uuid': news_id,
+        'news': news_html,
+        'thread_html': thread_html
+    })
 
 
 def test(request):
