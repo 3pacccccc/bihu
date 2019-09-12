@@ -94,16 +94,15 @@ def like(request):
 @ajax_require
 @require_http_methods(['GET'])
 def get_thread(request):
-    news_id = request.GET.get('news', '')
-    news_obj = News.objects.get(pk=news_id)
-    news_html = render_to_string('news/news_single.html', {'news': news_obj})  # 没有评论的时候
-    news_obj.refresh_from_db()
-    thread = news_obj.get_parent().thread.all()
-    thread_html = render_to_string('news/news_thread.html', {'thread': thread})  # 有评论的时候
+    news_id = request.GET['news']
+    news = News.objects.get(pk=news_id)
+    # render_to_string()表示加载模板，填充数据，返回字符串
+    news_html = render_to_string("news/news_single.html", {"news": news})  # 没有评论的时候
+    thread_html = render_to_string("news/news_thread.html", {"thread": news.get_thread()})  # 有评论的时候
     return JsonResponse({
         'uuid': news_id,
         'news': news_html,
-        'thread_html': thread_html
+        'thread': thread_html
     })
 
 
