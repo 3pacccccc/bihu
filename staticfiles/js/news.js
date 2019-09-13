@@ -79,11 +79,12 @@ $(function () {
             success: function (data) {
                 $("#replyInput").val("");
                 $("#newsThreadModal").modal("hide");
+                window.location.reload();
             },
             error: function (data) {
-                // alert(data.responseText);
-                alert("???");
+                alert(data.responseText);
             },
+
         });
     });
 

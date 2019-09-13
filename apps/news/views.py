@@ -125,3 +125,15 @@ def post_reply(request):
 
     else:
         return HttpResponseBadRequest("发表内容不能为空")
+
+
+
+@login_required
+@ajax_require
+@require_http_methods(["POST"])
+def update_interactions(request):
+    # 更新评论以及点赞数
+    data_point = request.POST['id_value']
+    news = News.objects.get(pk=data_point)
+    data = {'likes': news.count_likers(), 'comments': news.comment_count()}
+    return JsonResponse(data)

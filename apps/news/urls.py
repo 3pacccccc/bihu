@@ -1,8 +1,7 @@
 # __author__ = "MaRuiMin"
 from django.urls import path
 
-from news.views import NewsListView, post_news, NewsDeleteView, like, get_thread, post_reply
-
+from news.views import NewsListView, post_news, NewsDeleteView, like, get_thread, post_reply, update_interactions
 app_name = 'news'
 
 urlpatterns = [
@@ -12,4 +11,5 @@ urlpatterns = [
     path('like/', like, name='like_post'),
     path('get-thread/', get_thread, name='get_thread'),
     path('post-comment/', post_reply, name='post_comments'),
+    path('update-interactions/', update_interactions, name='update_interactions'),
 ]
