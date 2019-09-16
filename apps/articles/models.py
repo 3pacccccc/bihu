@@ -35,7 +35,7 @@ class Article(models.Model):
     title = models.CharField(max_length=255, null=False, unique=True, verbose_name='标题')
     user = models.ForeignKey(User, null=True, related_name='author', on_delete=models.SET_NULL, verbose_name="作者")
     image = models.ImageField(upload_to='articles/%Y/%m/%d/', verbose_name='文章图片')
-    slug = models.SlugField(max_length=80, null=True, blank=True, verbose_name='(URL)别名')
+    slug = models.SlugField(max_length=255, null=True, blank=True, verbose_name='(URL)别名')
     status = models.CharField(max_length=1, choices=STATUS, default='D', verbose_name='动态')
     content = MarkdownxField(verbose_name='内容')
     tags = TaggableManager(help_text='多个标签使用,(英文)隔开', verbose_name='标签')
