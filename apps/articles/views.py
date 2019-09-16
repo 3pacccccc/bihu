@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 
 from articles.forms import ArticleForm
+from utils.helper import AuthorRequireMixin
 from .models import Article
 
 
@@ -11,7 +12,7 @@ class ArticleListView(LoginRequiredMixin, ListView):
     model = Article
     template_name = 'articles/article_list.html'
     paginate_by = 10
-    context_object_name = 'article'
+    context_object_name = 'articles'
 
     def get_context_data(self, *args, **kwargs):
         context = super(ArticleListView, self).get_context_data(*args, **kwargs)
@@ -40,5 +41,21 @@ class CreateArticleView(LoginRequiredMixin, CreateView):
         return reverse_lazy('articles:list')
 
 
+class EditArticleView(LoginRequiredMixin, AuthorRequireMixin, UpdateView):
+    """
+    编辑文章
+    """
+    model = Article
+    message = "您的文章编辑成功"
+    form_class = ArticleForm
+    template_name = 'articles/article_update.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(EditArticleView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, self.message)
+        return reverse_lazy('arti')
 
 
