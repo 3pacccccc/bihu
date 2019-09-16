@@ -77,8 +77,9 @@ INSTALLED_APPS = [
     # app应用
     'users',
     'news',
+    'articles',
 
-    # 第三方登陆所需包
+    # 第三方应用所需包
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -87,6 +88,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'compressor',
     'allauth.socialaccount.providers.github',
+    'taggit',
+    'markdownx'
 ]
 
 STATICFILES_FINDERS = [
@@ -142,7 +145,7 @@ DATABASES = {
         'PORT': db_port,  # 端口
         # 这里引擎用innodb（默认myisam）
         # 因为后面第三方登录时，要求引擎为INNODB
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},  # 这样设置会报错，改为
+        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},  # 这样设置会报错，改为
         # "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
     }
 }

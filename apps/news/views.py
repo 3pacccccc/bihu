@@ -127,7 +127,6 @@ def post_reply(request):
         return HttpResponseBadRequest("发表内容不能为空")
 
 
-
 @login_required
 @ajax_require
 @require_http_methods(["POST"])
