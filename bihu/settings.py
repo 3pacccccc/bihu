@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'users',
     'news',
     'articles',
+    'qa',
 
     # 第三方应用所需包
     'crispy_forms',
@@ -144,6 +145,7 @@ DATABASES = {
         'PASSWORD': db_password,  # 密码
         'HOST': db_host,  # IP
         'PORT': db_port,  # 端口
+        'CONN_MAX_AGE': 9,
         # 这里引擎用innodb（默认myisam）
         # 因为后面第三方登录时，要求引擎为INNODB
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},  # 这样设置会报错，改为

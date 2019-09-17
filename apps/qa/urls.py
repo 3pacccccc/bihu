@@ -1,11 +1,12 @@
 # __author__ = "MaRuiMin"
 from django.urls import path
 
-from users.views import UserDetailView, UserUpdateView
+from qa import views
 
-app_name = 'users'
+app_name = 'qa'
 
 urlpatterns = [
-    path(r'update/', UserUpdateView.as_view(), name="update"),
-    path('<str:username>/', UserDetailView.as_view(), name="detail")
+    path('', views.UnansweredQuestionsListView.as_view(), name='unanswered_q'),
+    path('answered/', views.AnsweredQuestionsListView.as_view(), name='answered_q'),
+    path('indexed', views.QuestionListView.as_view(), name='all_q')
 ]

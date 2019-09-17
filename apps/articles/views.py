@@ -73,3 +73,5 @@ class DraftListView(ArticleListView):
     """
     def get_queryset(self):
         return Article.objects.filter(user=self.request.user).get_drafts()
+
+

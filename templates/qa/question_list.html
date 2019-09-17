@@ -11,13 +11,15 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'news:list' %}">首页</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'qa:unanswered_q' %}">问答</a></li>
+{#            <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'qa:unanswered_q' %}">问答</a></li>#}
+            <li class="breadcrumb-item active" aria-current="page"><a href="">问答</a></li>
         </ol>
     </nav>
 
     <div class="card my-4">
         <h5 class="card-header">按话题分类
-            <a href="{% url 'qa:ask_question' %}" class="btn-sm btn-primary pull-right">
+{#            <a href="{% url 'qa:ask_question' %}" class="btn-sm btn-primary pull-right">#}
+            <a href="" class="btn-sm btn-primary pull-right">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 提问
             </a>
         </h5>
@@ -30,17 +32,20 @@
     <div>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="{% url 'qa:unanswered_q' %}">
+{#                <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="{% url 'qa:unanswered_q' %}">#}
+                <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="">
                     等待回答
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="{% url 'qa:answered_q' %}">
+{#                <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="{% url 'qa:answered_q' %}">#}
+                <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="">
                     已有回答
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{% if active == 'all' %} active{% endif %}" href="{% url 'qa:all_q' %}">
+{#                <a class="nav-link{% if active == 'all' %} active{% endif %}" href="{% url 'qa:all_q' %}">#}
+                <a class="nav-link{% if active == 'all' %} active{% endif %}" href="">
                     全部问答
                 </a>
             </li>
