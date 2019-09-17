@@ -19,8 +19,10 @@ from django.urls import path, include
 from django.views.static import serve
 
 from bihu.settings import MEDIA_ROOT, STATIC_ROOT
+from news.views import NewsListView
 
 urlpatterns = [
+    path('', NewsListView.as_view(), name="index"),
     path('admin/', admin.site.urls),
     url(r'accounts/', include('allauth.urls')),  # 第三方登陆url
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),  # 配置url里面文件的上传
