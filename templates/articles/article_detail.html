@@ -42,7 +42,14 @@
                             {% get_comment_form for article as form %}
                             <form action="{% comment_form_target %}" method="POST">
                                 {% csrf_token %}
-                                {{ form|crispy }}
+{#                                {{ form|crispy }}#}
+                                <div id="id_comment" class="form-group">
+                                    <textarea name="comment" rows="5" maxlength="400" class="textarea form-control"></textarea>
+                                </div>
+                                {{ form.content_type }}
+                                {{ form.object_pk }}
+                                {{ form.timestamp }}
+                                {{ form.security_hash }}
                                 <input type="hidden" name="next" value="{% url 'articles:article' article.slug %}"/>
                                 <input class="btn btn-info" type="submit" value="提交" id="id_submit"/>
                             </form>

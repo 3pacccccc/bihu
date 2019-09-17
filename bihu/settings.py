@@ -80,16 +80,17 @@ INSTALLED_APPS = [
     'articles',
 
     # 第三方应用所需包
+    'crispy_forms',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'sorl.thumbnail',
-    'crispy_forms',
     'compressor',
     'allauth.socialaccount.providers.github',
     'taggit',
-    'markdownx'
+    'markdownx',
+    'django_comments'
 ]
 
 STATICFILES_FINDERS = [
@@ -98,7 +99,7 @@ STATICFILES_FINDERS = [
 ]
 STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 SITE_ID = 1
 
 MIDDLEWARE = [

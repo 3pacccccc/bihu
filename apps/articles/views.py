@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 from articles.forms import ArticleForm
 from utils.helper import AuthorRequireMixin
@@ -56,6 +56,20 @@ class EditArticleView(LoginRequiredMixin, AuthorRequireMixin, UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, self.message)
-        return reverse_lazy('arti')
+        return reverse_lazy('articles:list')
 
 
+class DetailArticleView(LoginRequiredMixin, DetailView):
+    """
+    文章详情
+    """
+    model = Article
+    template_name = 'articles/article_detail.html'
+
+
+class DraftListView(ArticleListView):
+    """
+    草稿箱列表
+    """
+    def get_queryset(self):
+        return Article.objects.filter(user=self.request.user).get_drafts()
