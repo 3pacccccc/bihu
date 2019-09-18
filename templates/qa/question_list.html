@@ -18,8 +18,7 @@
 
     <div class="card my-4">
         <h5 class="card-header">按话题分类
-{#            <a href="{% url 'qa:ask_question' %}" class="btn-sm btn-primary pull-right">#}
-            <a href="" class="btn-sm btn-primary pull-right">
+            <a href="{% url 'qa:ask_question' %}" class="btn-sm btn-primary pull-right">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 提问
             </a>
         </h5>
@@ -32,20 +31,17 @@
     <div>
         <ul class="nav nav-tabs">
             <li class="nav-item">
-{#                <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="{% url 'qa:unanswered_q' %}">#}
-                <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="">
+                <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="{% url 'qa:unanswered_q' %}">
                     等待回答
                 </a>
             </li>
             <li class="nav-item">
-{#                <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="{% url 'qa:answered_q' %}">#}
-                <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="">
+                <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="{% url 'qa:answered_q' %}">
                     已有回答
                 </a>
             </li>
             <li class="nav-item">
-{#                <a class="nav-link{% if active == 'all' %} active{% endif %}" href="{% url 'qa:all_q' %}">#}
-                <a class="nav-link{% if active == 'all' %} active{% endif %}" href="">
+                <a class="nav-link{% if active == 'all' %} active{% endif %}" href="{% url 'qa:all_q' %}">
                     全部问答
                 </a>
             </li>

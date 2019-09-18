@@ -55,7 +55,8 @@
     </div>
     <div class="row">
         <ul class="col-md-12">
-            {% for answer in question.answer_set.all %}
+{#            {% for answer in question.answer_set.all %}#}
+            {% for answer in question.get_answers %}
                 {% include 'qa/answer_sample.html' with answer=answer %}
             {% empty %}
                 <div class="text-center">
