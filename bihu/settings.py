@@ -146,6 +146,11 @@ DATABASES = {
         'HOST': db_host,  # IP
         'PORT': db_port,  # 端口
         'CONN_MAX_AGE': 9,
+        "TEST":{
+            'NAME': "test_for_bihu",
+            'CHARSET': "utf8",
+            'COLLATION': 'utf8_general_ci'
+        },
         # 这里引擎用innodb（默认myisam）
         # 因为后面第三方登录时，要求引擎为INNODB
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},  # 这样设置会报错，改为
