@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'news',
     'articles',
     'qa',
+    'messager',
 
     # 第三方应用所需包
     'crispy_forms',

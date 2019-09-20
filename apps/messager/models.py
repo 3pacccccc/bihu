@@ -1,39 +1,57 @@
-from django.contrib.auth.models import AbstractUser
+import uuid
+
 from django.db import models
 
-# Create your models here.
-from django.urls import reverse
+from users.models import User
 
 
-class User(AbstractUser):
-    """自定义用户模型"""
-    nickname = models.CharField(null=True, blank=True, max_length=255, verbose_name='昵称')
-    job_title = models.CharField(max_length=50, null=True, blank=True, verbose_name='职称')
-    introduction = models.TextField(blank=True, null=True, verbose_name='简介')
-    picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True, verbose_name='头像')
-    location = models.CharField(max_length=50, null=True, blank=True, verbose_name='城市')
-    personal_url = models.URLField(max_length=555, blank=True, null=True, verbose_name='个人链接')
-    weibo = models.URLField(max_length=255, blank=True, null=True, verbose_name='微博链接')
-    zhihu = models.URLField(max_length=255, blank=True, null=True, verbose_name='知乎链接')
-    github = models.URLField(max_length=255, blank=True, null=True, verbose_name='Github链接')
-    linkedin = models.URLField(max_length=255, blank=True, null=True, verbose_name='LinkedIn链接')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+class MessageQuerySet(models.query.QuerySet):
+
+    def get_conversation(self, sender, recipient):
+        qs_one = self.filter(sender=sender, recipient=recipient)
+        qs_two = self.filter(sender=recipient, recipient=sender)
+        return qs_one.union(qs_two).order_by('created_at')
+
+    def get_most_recent_conversation(self, recipient):
+        """
+        获取最近一次私信互动的用户
+        """
+        try:
+            qs_sent = self.filter(sender=recipient)
+            qs_receive = self.filter(recipient=recipient)
+            qs = qs_sent.union(qs_receive).latest('created_at')
+            if qs.sender == recipient:
+                return qs.recipient
+            return qs.sender
+        except self.model.DoesNotExist:
+            return User.objects.get(username=recipient.username)
+
+    def mark_as_read(self, sender, recipient):
+        qs = self.filter(sender=sender, recipient=recipient)
+        return qs.update(unread=False)
+
+
+class Message(models.Model):
+    """
+    用户间私信
+    """
+    uuid_id = models.UUIDField(editable=False, default=uuid.uuid4, primary_key=True)
+    sender = models.ForeignKey(User, related_name='send_messages', blank=True, null=True, on_delete=models.SET_NULL, verbose_name='发送者')
+    recipient = models.ForeignKey(User, related_name='received_messages', blank=True, null=True, on_delete=models.SET_NULL, verbose_name='接收者')
+    message = models.TextField(blank=True, null=True, verbose_name='内容')
+    unread = models.BooleanField(default=True, db_index=True, verbose_name='是否未读')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')  # 没有updated_at，私信发送之后不能修改或撤回
+    objects = MessageQuerySet.as_manager()
 
     class Meta:
-        verbose_name = '用户'
+        verbose_name = '私信'
         verbose_name_plural = verbose_name
+        ordering = ('-created_at',)
 
     def __str__(self):
-        return self.username
+        return self.message
 
-    def get_absolute_url(self):
-        return reverse('users:detail', kwargs={'username': self.username})
-
-    def get_profile_name(self):
-        if self.nickname:
-            return self.nickname
-        return self.username
-
-
-
+    def mark_as_read(self):
+        if self.unread:
+            self.unread = False
+            self.save()

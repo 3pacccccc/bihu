@@ -1,11 +1,13 @@
 # __author__ = "MaRuiMin"
 from django.urls import path
 
-from users.views import UserDetailView, UserUpdateView
+from messager import views
 
-app_name = 'users'
+app_name = 'messager'
 
 urlpatterns = [
-    path(r'update/', UserUpdateView.as_view(), name="update"),
-    path('<str:username>/', UserDetailView.as_view(), name="detail")
+    path('', views.MessageListView.as_view(), name='messages_list'),
+    path('send-message/', views.send_message, name='send_message'),
+    path('receive-message/', views.receive_message, name='receive_message'),
+    path('<username>/', views.ConversationListView.as_view(), name='conversation_detail'),
 ]
