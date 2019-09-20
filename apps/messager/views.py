@@ -1,3 +1,5 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
@@ -66,6 +68,16 @@ def send_message(request):
             recipient=recipient,
             message=message
         )
+
+        channel_layer = get_channel_layer()
+        payload = {
+            'type': 'receive',
+            'key': 'message',
+            'message_id': str(msg.uuid_id),
+            'sender': sender.username,
+            'recipient': recipient.username
+        }
+        async_to_sync(channel_layer.group_send)(recipient.username, payload)
 
         return render(request, 'messager/single_message.html', {'message': msg})
 

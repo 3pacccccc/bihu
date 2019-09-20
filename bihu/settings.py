@@ -92,8 +92,19 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'taggit',
     'markdownx',
-    'django_comments'
+    'django_comments',
+    'channels'  # 用于websocke协议的连接
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': redis_host,  # channels缓存通道使用Redis 3
+        },
+    }
+}
+ASGI_APPLICATION = 'bihu.routing.application'
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -147,7 +158,7 @@ DATABASES = {
         'HOST': db_host,  # IP
         'PORT': db_port,  # 端口
         'CONN_MAX_AGE': 9,
-        "TEST":{
+        "TEST": {
             'NAME': "test_for_bihu",
             'CHARSET': "utf8",
             'COLLATION': 'utf8_general_ci'
