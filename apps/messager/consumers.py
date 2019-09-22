@@ -13,12 +13,12 @@ class MessagesConsumer(AsyncWebsocketConsumer):
         if self.scope['user'].is_anonymous:
             await self.close()
         else:
-            await self.channel_layer.group_add(self.scope['user'].username, self.channel_name)
+            await self.channel_layer.group_add(f"{self.scope['user'].username}", self.channel_name)
             await self.accept()
 
     async def disconnect(self, close_code):
         # 离开聊天组
-        await self.channel_layer.group_discard(self.scope['user'].username, self.channel_name)
+        await self.channel_layer.group_discard(f"{self.scope['user'].username}", self.channel_name)
 
     async def receive(self, text_data=None, bytes_data=None):
         """接收私信"""
