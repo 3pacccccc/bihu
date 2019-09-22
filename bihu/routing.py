@@ -4,12 +4,14 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.urls import path
 
-from bihu.consumers import MessagesConsumer
+from messager.consumers import MessagesConsumer
+from notifications.consumers import NotificationsConsumer
 
 application = ProtocolTypeRouter({
     'websocket': AllowedHostsOriginValidator(
         AuthMiddlewareStack(
             URLRouter([
+                path('ws/notifications/', NotificationsConsumer),
                 path('ws/<username>/', MessagesConsumer),
             ])
         )

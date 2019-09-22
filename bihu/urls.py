@@ -36,4 +36,5 @@ urlpatterns = [
     path('articles/', include('articles.urls', namespace='articles')),
     path('qa/', include('qa.urls', namespace='qa')),
     path('messages/', include('messager.urls', namespace='messages')),
+    path('notifications/', include('notifications.urls', namespace='notifications')),
 ]

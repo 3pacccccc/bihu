@@ -6,19 +6,6 @@ $(function () {
         $('.messages-list').scrollTop($('.messages-list')[0].scrollHeight);
     }
 
-    // 添加消息函数
-    function addNewMessage(message_id) {
-        $.ajax({
-            url: '/messages/receive-message/',
-            data: {'message_id': message_id},
-            cache: false,
-            success: function (data) {
-                $(".send-message").before(data); // 将接收到的消息插入到聊天框
-                scrollConversationScreen(); // 滚动条下拉到底
-            }
-        });
-    }
-
     // AJAX POST发送消息
     $("#send").submit(function () {
         $.ajax({

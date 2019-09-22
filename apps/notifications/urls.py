@@ -1,12 +1,14 @@
 # __author__ = "MaRuiMin"
+
 from django.urls import path
 
-from messager import views
+from notifications import views
 
-app_name = 'messager'
+app_name = 'notifications'
 
 urlpatterns = [
-    path('', views.MessageListView.as_view(), name='messages_list'),
-    path('send-message/', views.send_message, name='send_message'),
-    path('<username>/', views.ConversationListView.as_view(), name='conversation_detail'),
+    path('', views.NotificationUnreadListView.as_view(), name='unread'),
+    path('mark-as-read/<slug>/', views.mark_as_read, name='mark_as_read'),
+    path('mark-all-as-read/', views.mark_all_as_read, name='mark_all_read'),
+    path('latest-notifications/', views.get_latest_notifications, name='latest_notifications'),
 ]

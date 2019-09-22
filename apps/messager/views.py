@@ -9,13 +9,13 @@ from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView
 
 from messager.models import Message
+from notifications.views import notification_handler
 from users.models import User
 from utils.helper import ajax_require
 
 
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
-    paginate_by = 10
     template_name = 'messager/message_list.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -71,26 +71,14 @@ def send_message(request):
 
         channel_layer = get_channel_layer()
         payload = {
-            'type': 'receive',
+            'type': 'receive',   # 表示将消息传递给当前channel_layer的receive函数处理
             'key': 'message',
             'message_id': str(msg.uuid_id),
             'sender': sender.username,
             'recipient': recipient.username
         }
         async_to_sync(channel_layer.group_send)(recipient.username, payload)
-
+        notification_handler(sender, recipient, 'R', msg)
         return render(request, 'messager/single_message.html', {'message': msg})
 
     return HttpResponse("发送失败", content_type='application/json')
-
-
-@login_required
-@ajax_require
-@require_http_methods(["GET"])
-def receive_message(request):
-    """
-    接收消息，ajax get请求
-    """
-    message_id = request.GET.get('message_id')
-    msg = get_object_or_404(Message, pk=message_id)
-    return render(request, 'messager/single_message.html', {'message': msg})

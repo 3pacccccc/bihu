@@ -2,8 +2,10 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django_comments.signals import comment_was_posted
 
 from articles.forms import ArticleForm
+from notifications.views import notification_handler
 from utils.helper import AuthorRequireMixin
 from .models import Article
 
@@ -71,7 +73,22 @@ class DraftListView(ArticleListView):
     """
     草稿箱列表
     """
+
     def get_queryset(self):
         return Article.objects.filter(user=self.request.user).get_drafts()
 
 
+def notify_comment(**kwargs):
+    """
+    文章有评论的时候通知作者
+    :param kwargs:
+    :return:
+    """
+    actor = kwargs['request'].user
+    receiver = kwargs['comment'].content_object.user
+    obj = kwargs['comment'].content_object
+    notification_handler(actor, receiver, 'C', obj)
+
+
+# 使用django_comments的信号机制,在文章有评论的时候出发信号量，执行notify_comment函数
+comment_was_posted.connect(receiver=notify_comment)

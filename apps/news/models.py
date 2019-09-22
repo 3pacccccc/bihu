@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 
+from notifications.views import notification_handler
 from users.models import User
 
 
@@ -35,6 +36,7 @@ class News(models.Model):
             self.liked.remove(user)
         else:
             self.liked.add(user)
+            notification_handler(user, self.user, 'L', self, id_value=str(self.uuid_id), key='social_update')
 
     def get_parent(self):
         """
@@ -60,6 +62,7 @@ class News(models.Model):
             reply=True,
             parent=parent
         )
+        notification_handler(user, parent.user, 'R', reply_news, id_value=str(parent.uuid_id), key='social_update')
 
     def get_likers(self):
         return self.liked.all()

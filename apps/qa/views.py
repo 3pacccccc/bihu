@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView, DetailView, CreateView
 
+from notifications.views import notification_handler
 from qa.forms import QuestionForm
 from qa.models import Question, Answer
 from utils.helper import ajax_require
@@ -157,4 +158,5 @@ def accept_answer(request):
     if answer.question.user.username != request.user.username:
         raise PermissionDenied
     answer.accept_answer()
+    notification_handler(request.user, answer.user, 'W', answer)
     return JsonResponse({'status': 'true'}, status=200)

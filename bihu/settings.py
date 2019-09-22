@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'articles',
     'qa',
     'messager',
+    'notifications',
 
     # 第三方应用所需包
     'crispy_forms',
@@ -100,7 +101,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': redis_host,  # channels缓存通道使用Redis 3
+            'hosts': [redis_host, ]  # channels缓存通道使用Redis 3
         },
     }
 }

@@ -1,57 +1,106 @@
 import uuid
 
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.core import serializers
 from django.db import models
+from slugify import slugify
 
 from users.models import User
 
 
-class MessageQuerySet(models.query.QuerySet):
+class NotificationQuerySet(models.query.QuerySet):
 
-    def get_conversation(self, sender, recipient):
-        qs_one = self.filter(sender=sender, recipient=recipient)
-        qs_two = self.filter(sender=recipient, recipient=sender)
-        return qs_one.union(qs_two).order_by('created_at')
+    def unread(self):
+        return self.filter(unread=True)
 
-    def get_most_recent_conversation(self, recipient):
+    def read(self):
+        return self.filter(unread=False)
+
+    def mark_all_as_read(self, recipient):
         """
-        获取最近一次私信互动的用户
+        全部标记为已读
+        :return:
         """
-        try:
-            qs_sent = self.filter(sender=recipient)
-            qs_receive = self.filter(recipient=recipient)
-            qs = qs_sent.union(qs_receive).latest('created_at')
-            if qs.sender == recipient:
-                return qs.recipient
-            return qs.sender
-        except self.model.DoesNotExist:
-            return User.objects.get(username=recipient.username)
+        notification_obj = self.filter(recipient=recipient)
+        return notification_obj.update(unread=False)
 
-    def mark_as_read(self, sender, recipient):
-        qs = self.filter(sender=sender, recipient=recipient)
-        return qs.update(unread=False)
+    def mark_all_as_unread(self, recipient):
+        notification_obj = self.filter(recipient=recipient)
+        return notification_obj.update(unread=True)
+
+    def get_most_recent(self, recipient):
+        notification_obj = self.filter(recipient=recipient, unread=True)[:5]
+        return notification_obj
+
+    def serialize_latest_notifications(self, recipient):
+        qs = self.get_most_recent(recipient)
+        notification_dic = serializers.serialize('json', qs)
+        return notification_dic
 
 
-class Message(models.Model):
-    """
-    用户间私信
-    """
+class Notifications(models.Model):
+    NOTIFICATION_TYPES = (
+        ('L', '赞了'), ('C', '评论了'), ('F', '收藏了'), ('A', '回答了'), ('W', '接受了回答'), ('R', '回复了'), ('I', '登录'), ('O', '退出'),
+    )
     uuid_id = models.UUIDField(editable=False, default=uuid.uuid4, primary_key=True)
-    sender = models.ForeignKey(User, related_name='send_messages', blank=True, null=True, on_delete=models.SET_NULL, verbose_name='发送者')
-    recipient = models.ForeignKey(User, related_name='received_messages', blank=True, null=True, on_delete=models.SET_NULL, verbose_name='接收者')
-    message = models.TextField(blank=True, null=True, verbose_name='内容')
-    unread = models.BooleanField(default=True, db_index=True, verbose_name='是否未读')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')  # 没有updated_at，私信发送之后不能修改或撤回
-    objects = MessageQuerySet.as_manager()
+    actor = models.ForeignKey(User, related_name='notify_actor', on_delete=models.CASCADE, verbose_name='触发者')
+    recipient = models.ForeignKey(User, related_name='notifications', null=True, blank=True, on_delete=models.CASCADE,
+                                  verbose_name='接收者')
+    unread = models.BooleanField(default=True, db_index=True, verbose_name='未读')
+    slug = models.SlugField(max_length=255, null=True, blank=True, verbose_name='(URL)别名')
+    verb = models.CharField(max_length=1, choices=NOTIFICATION_TYPES, verbose_name='通知类别')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    objects = NotificationQuerySet.as_manager()
+
+    # 使Notifications变成通用外键
+    object_id = models.CharField(max_length=255, blank=True, null=True)
+    content_type = models.ForeignKey(ContentType, related_name='notify_action_object', blank=True, null=True,
+                                     on_delete=models.CASCADE)
+    action_object = GenericForeignKey()  # 或GenericForeignKey("content_type", "object_id")
 
     class Meta:
-        verbose_name = '私信'
+        verbose_name = '通知'
         verbose_name_plural = verbose_name
         ordering = ('-created_at',)
 
     def __str__(self):
-        return self.message
+        if self.action_object:
+            return f'{self.actor} {self.get_verb_display()} {self.action_object}'
+        return f'{self.actor} {self.get_verb_display()}'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f'{self.recipient} {self.uuid_id} {self.verb}')
+        super(Notifications, self).save(*args, **kwargs)
+
+    def get_icon(self):
+        """根据通知类别，返回通知下拉菜单中的样式"""
+        if self.verb == 'C' or self.verb == 'A':
+            return 'fa-comment'
+
+        elif self.verb == 'L':
+            return 'fa-heart'
+
+        elif self.verb == 'F':
+            return 'fa-star'
+
+        elif self.verb == 'W':
+            return 'fa-check-circle'
+
+        elif self.verb == 'R':
+            return 'fa-reply'
+
+        elif self.verb == 'I' or self.verb == 'U' or self.verb == 'O':
+            return 'fa-users'
 
     def mark_as_read(self):
         if self.unread:
             self.unread = False
+            self.save()
+
+    def mark_as_unread(self):
+        if not self.unread:
+            self.unread = True
             self.save()

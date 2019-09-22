@@ -10,15 +10,23 @@ class MessagesConsumer(AsyncWebsocketConsumer):
     """
 
     async def connect(self):
+        """
+        # 用户一登陆，channels就会在redis里面创建创建一个以用户的username为组名的组
+        (如果是以redis作为channels的话),发送私信就会往这个组里面发送msg
+        """
         if self.scope['user'].is_anonymous:
             await self.close()
         else:
-            await self.channel_layer.group_add(f"{self.scope['user'].username}", self.channel_name)
+            group_name = self.scope['user'].username
+            await self.channel_layer.group_add(group_name, self.channel_name)
             await self.accept()
 
     async def disconnect(self, close_code):
-        # 离开聊天组
-        await self.channel_layer.group_discard(f"{self.scope['user'].username}", self.channel_name)
+        try:
+            group_name = self.scope['user'].username
+            await self.channel_layer.group_discard(group_name, self.channel_name)
+        except Exception as e:
+            pass
 
     async def receive(self, text_data=None, bytes_data=None):
         """接收私信"""
