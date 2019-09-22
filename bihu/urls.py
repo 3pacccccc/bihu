@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import debug_toolbar
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
@@ -29,6 +30,7 @@ urlpatterns = [
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),  # 配置url里面文件的上传
     path('markdownx/', include('markdownx.urls')),
     path('comments/', include('django_comments.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
 
     # APP下的路由
     path('users/', include('users.urls', namespace='users')),

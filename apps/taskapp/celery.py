@@ -5,9 +5,9 @@ from django.conf import settings
 
 if not settings.configured:
     # set the default Django settings module for the 'celery' program.
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')  # pragma: no cover
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bihu.settings')  # pragma: no cover
 
-app = Celery('zanhu')
+app = Celery('bihu')
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.
 # - namespace='CELERY' means all celery-related configuration keys
@@ -16,7 +16,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 
 class CeleryAppConfig(AppConfig):
-    name = 'zanhu.taskapp'
+    name = 'taskapp'
     verbose_name = 'Celery Config'
 
     def ready(self):
