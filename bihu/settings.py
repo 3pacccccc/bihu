@@ -64,6 +64,8 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # 重载django的user表
 AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'news:list'  # 登录跳转配置
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'  # 将session保存到缓存数据库中，本项目即是redis的0库
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -261,3 +263,18 @@ CELERYD_TASK_TIME_LIMIT = 5 * 60  # 单个任务的最大运行时间5分钟
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
 # TODO: set to whatever value is adequate in your circumstances
 CELERYD_TASK_SOFT_TIME_LIMIT = 60  # 任务的软时间限制，超时候SoftTimeLimitExceeded异常将会被抛出
+
+# CACHES
+# ------------------------------------------------------------------------------
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': redis_cache,  # 网站缓存使用Redis 0
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            # Mimicing memcache behavior.
+            # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+            'IGNORE_EXCEPTIONS': True,
+        }
+    }
+}

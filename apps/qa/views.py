@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_http_methods
 from django.views.generic import ListView, DetailView, CreateView
 
@@ -68,6 +70,7 @@ class QuestionDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+@method_decorator(cache_page(60 * 60), name='get')    # 将CreateArticleView GET方法返回的数据缓存
 class CreateQuestionView(LoginRequiredMixin, CreateView):
     """
     提出问题
@@ -85,6 +88,7 @@ class CreateQuestionView(LoginRequiredMixin, CreateView):
         return reverse_lazy('qa:unanswered_q')
 
 
+@method_decorator(cache_page(60 * 60), name='get')    # 将CreateArticleView GET方法返回的数据缓存
 class CreateAnswerView(LoginRequiredMixin, CreateView):
     """
     回答问题

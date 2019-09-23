@@ -1,4 +1,4 @@
-{% load static compress thumbnail %}<!DOCTYPE html>
+{% load static compress thumbnail cache %}<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,6 +26,8 @@
 
 </head>
 <body>
+缓存nav标签下的数据，除了登陆的用户信息
+{% cache 3600 sidebar request.user.username %}
 <nav class="navbar fixed-top navbar-expand-sm bg-light">
     <div class="container">
 {#        <a class="navbar-brand" href="{% url 'news:list' %}">赞 乎&nbsp;&nbsp;</a>#}
@@ -85,6 +87,8 @@
         </div>
     </div>
 </nav>
+{%  endcache %}
+
 <div class="mb-3"></div>
 <div class="container">
     {% if messages %}

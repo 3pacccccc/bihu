@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django_comments.signals import comment_was_posted
 
@@ -25,6 +27,7 @@ class ArticleListView(LoginRequiredMixin, ListView):
         return Article.objects.get_published()
 
 
+@method_decorator(cache_page(60 * 60), name='get')    # 将CreateArticleView GET方法返回的数据缓存
 class CreateArticleView(LoginRequiredMixin, CreateView):
     """
     创建文章
