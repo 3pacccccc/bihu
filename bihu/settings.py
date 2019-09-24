@@ -248,9 +248,9 @@ if USE_TZ:
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
     CELERY_TIMEZONE = TIME_ZONE
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
-CELERY_BROKER_URL = "redis://localhost:6379/1"  # 使用Redis 1作为消息代理
+CELERY_BROKER_URL = redis_broker_url  # 使用Redis 1作为消息代理
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
-CELERY_RESULT_BACKEND = "redis://localhost:6379/2"  # 把任务结果存在Redis 2
+CELERY_RESULT_BACKEND = redis_result_backend  # 把任务结果存在Redis 2
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content
 CELERY_ACCEPT_CONTENT = ['json', 'msgpack']  # 指定接受的内容类型
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_serializer
