@@ -26,7 +26,7 @@
 
 </head>
 <body>
-缓存nav标签下的数据，除了登陆的用户信息
+{#缓存nav标签下的数据，除了登陆的用户信息#}
 {% cache 3600 sidebar request.user.username %}
 <nav class="navbar fixed-top navbar-expand-sm bg-light">
     <div class="container">
