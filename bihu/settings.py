@@ -100,8 +100,7 @@ INSTALLED_APPS = [
     'channels',  # 用于websocke协议的连接
     'debug_toolbar',
     'djcelery_email',
-    'gunicorn',
-    'supervisor'
+    'gunicorn'
 ]
 
 CHANNEL_LAYERS = {
