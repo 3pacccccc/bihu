@@ -21,12 +21,10 @@ from django.views.static import serve
 
 from bihu.settings import MEDIA_ROOT, STATIC_ROOT
 from news.views import NewsListView
-from qa.views import wechat_verify
 
 urlpatterns = [
     path('', NewsListView.as_view(), name="index"),
     path('admin/', admin.site.urls),
-    path('MP_verify_JkXLni4r1o1OGIXO.txt/', wechat_verify),  # 微信驗證
     url(r'accounts/', include('allauth.urls')),  # 第三方登陆url
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),  # 配置url里面文件的上传
     url(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT}),  # 配置url里面文件的上传

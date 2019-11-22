@@ -1,10 +1,8 @@
-import json
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -72,7 +70,7 @@ class QuestionDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-@method_decorator(cache_page(60 * 60), name='get')    # 将CreateArticleView GET方法返回的数据缓存
+@method_decorator(cache_page(60 * 60), name='get')  # 将CreateArticleView GET方法返回的数据缓存
 class CreateQuestionView(LoginRequiredMixin, CreateView):
     """
     提出问题
@@ -90,7 +88,7 @@ class CreateQuestionView(LoginRequiredMixin, CreateView):
         return reverse_lazy('qa:unanswered_q')
 
 
-@method_decorator(cache_page(60 * 60), name='get')    # 将CreateArticleView GET方法返回的数据缓存
+@method_decorator(cache_page(60 * 60), name='get')  # 将CreateArticleView GET方法返回的数据缓存
 class CreateAnswerView(LoginRequiredMixin, CreateView):
     """
     回答问题
@@ -166,7 +164,3 @@ def accept_answer(request):
     answer.accept_answer()
     notification_handler(request.user, answer.user, 'W', answer)
     return JsonResponse({'status': 'true'}, status=200)
-
-
-def wechat_verify(request):
-    return HttpResponse(json.dumps("JkXLni4r1o1OGIXO"), content_type='application/json')
