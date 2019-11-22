@@ -1,8 +1,10 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -164,3 +166,7 @@ def accept_answer(request):
     answer.accept_answer()
     notification_handler(request.user, answer.user, 'W', answer)
     return JsonResponse({'status': 'true'}, status=200)
+
+
+def wechat_verify(request):
+    return HttpResponse(json.dumps("JkXLni4r1o1OGIXO"), content_type='application/json')
